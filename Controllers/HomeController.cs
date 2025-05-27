@@ -8,7 +8,6 @@ namespace CinemaWebApp.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.Title = "Home Page";
             ViewBag.Message = "Welcome to the Cinema Web App!";
 
             return View();
