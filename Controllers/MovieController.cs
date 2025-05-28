@@ -2,6 +2,7 @@
 using CinemaWebApp.Models; 
 using System.Collections.Generic;
 using CinemaWebApp.Models.Data;
+using CinemaWebApp.ViewModel;
 namespace CinemaWebApp.Controllers
 {
     public class MovieController : Controller
@@ -23,21 +24,34 @@ namespace CinemaWebApp.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new MovieViewModel());
         }
 
         // POST: Action to handle form submission for creating a new movie
         [HttpPost]
-        public IActionResult Create(Movie movie)
+        public IActionResult Create(MovieViewModel viewModel)
         {
+            //Validate the input data using ModelState
             if (ModelState.IsValid)
             {
-                _context.Movies.Add(movie); // Add the movie to the database
-                _context.SaveChanges(); // Save changes to the database 
-                return RedirectToAction("Index"); // Redirext to the Index action
+                //Map the view model to the Movie entity
+                var movie = new Movie
+                {
+                    Title = viewModel.Title,
+                    Genre = viewModel.Genre,
+                    ReleaseDate = viewModel.ReleaseDate,
+                    Director = viewModel.Director,
+                    Duration = viewModel.Duration,
+                    Description = viewModel.Description
+                };
+
+                _context.Movies.Add(movie);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
             }
 
-            return View(movie);
+            return View(viewModel);
         }
 
         // Action to show details of a specific movie

@@ -1,27 +1,33 @@
-﻿@model CinemaWebApp.Models.Movie
+﻿@using CinemaWebApp.ViewModel
+@model MovieViewModel
 
 <h2>Add a New Movie</h2>
 
 <form asp-action="Create" method="post">
     <div>
-        <label for="Name">Movie Name</label>
+        <label for="Title">Movie Name</label>
         <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
     <div>
         <label for="Genre">Genre</label>
         <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
     </div>
     <div>
         <label for="ReleaseDate">Release Date</label>
         <input asp-for="ReleaseDate" type="month" class="form-control" />
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
     </div>
     <div>
         <label for="Duration">Duration (minutes)</label>
         <input asp-for="Duration" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
     </div>
     <div>
         <label for="Director">Director</label>
         <input asp-for="Director" class="form-control" />
+        <span asp-validation-for="Director" class="text-danger"></span>
     </div>
     <div>
         <label for="Description">Description</label>
