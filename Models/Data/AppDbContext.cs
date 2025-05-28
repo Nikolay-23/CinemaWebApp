@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebApp.Models.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -13,7 +15,7 @@ namespace CinemaWebApp.Models.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<CinemaMovie> CinemasMovies { get; set; }
-
+        public DbSet<UserMovie> UsersMovies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +36,22 @@ namespace CinemaWebApp.Models.Data
                  .HasOne(cm => cm.Movie)            //A CinemaMovie entity has one Movie...
                  .WithMany(m => m.CinemaMovies)     //A Movie entity can have many CinemaMovies
                  .HasForeignKey(cm => cm.MovieId);  //MovieId is the foreign key in CinemaMovie
+
+            //Define the composite key for the UserMovie entity
+            modelBuilder.Entity<UserMovie>()
+                .HasKey(um => new { um.UserId, um.MovieId });
+
+            //Configure the relationship berween the UserMovie and IdentityUser entities
+            modelBuilder.Entity<UserMovie>()
+                .HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(um => um.UserId);
+
+            //Configure the relationship between the UserMovie and Movie entities
+            modelBuilder.Entity<UserMovie>()
+                .HasOne(um => um.Movie)
+                .WithMany()
+                .HasForeignKey(um => um.MovieId);
         }
 
         

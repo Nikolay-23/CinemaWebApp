@@ -1,4 +1,5 @@
 using CinemaWebApp.Models.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebApp
@@ -18,7 +19,44 @@ namespace CinemaWebApp
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //Add Identity services
+            //builder.Services.AddDefaultIdentity<IdentityUser>()
+                           // .AddEntityFrameworkStores<AppDbContext>();
+
+            //Configure Identity with custom options
+            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                //Password Settings
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+                options.SignIn.RequireConfirmedAccount = false;
+
+                //Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                //User settings
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+
+                //SignIn settings
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+            })
+                .AddEntityFrameworkStores<AppDbContext>();
             var app = builder.Build();
+
+            //Add Authorization and Authentication middleware
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            //Enable Identity's Razor Pages for login, register, etc.
+            app.MapRazorPages();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

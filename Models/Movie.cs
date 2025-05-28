@@ -16,6 +16,7 @@
 
         public string Description { get; set; } = null!;
 
+        public string ImageUrl { get; set; } = null!;
         //Navigation property for many-to-many relationship with Cinema
         public ICollection<CinemaMovie> CinemaMovies { get; set;} = new List<CinemaMovie>();
     }
