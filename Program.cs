@@ -1,3 +1,4 @@
+using CinemaWebApp.Models;
 using CinemaWebApp.Models.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace CinemaWebApp
                            // .AddEntityFrameworkStores<AppDbContext>();
 
             //Configure Identity with custom options
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 //Password Settings
                 options.Password.RequireDigit = false;

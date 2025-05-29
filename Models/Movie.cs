@@ -18,6 +18,8 @@
 
         public string ImageUrl { get; set; } = null!;
         //Navigation property for many-to-many relationship with Cinema
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
         public ICollection<CinemaMovie> CinemaMovies { get; set;} = new List<CinemaMovie>();
     }
 }
