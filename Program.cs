@@ -1,5 +1,7 @@
 using CinemaWebApp.Models;
 using CinemaWebApp.Models.Data;
+using CinemaWebApp.Repositories;
+using CinemaWebApp.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,13 @@ namespace CinemaWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Register repositories in the DI container
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // Register the generic repository
+
+            builder.Services.AddScoped<IMovieRepository, MovieRepository>(); //Register specific repositories
+            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+            builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
+
             // Configure the DbContext with SQL Server
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -21,8 +30,8 @@ namespace CinemaWebApp
             });
 
             //Add Identity services
-            //builder.Services.AddDefaultIdentity<IdentityUser>()
-                           // .AddEntityFrameworkStores<AppDbContext>();
+            //builder.Services.AddDefaultIdentity<ApplicationUser>()
+                            //.AddEntityFrameworkStores<AppDbContext>();
 
             //Configure Identity with custom options
             builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
