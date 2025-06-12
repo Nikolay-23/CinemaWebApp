@@ -1,5 +1,6 @@
 ﻿using CinemaWebApp.Models;
 using CinemaWebApp.Models.Data;
+using CinemaWebApp.Repositories.Contracts;
 using CinemaWebApp.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +10,11 @@ namespace CinemaWebApp.Controllers
     public class CinemaController : Controller
     {
         private readonly AppDbContext _context;
-        public CinemaController(AppDbContext context)
+        private readonly ICinemaRepository _cinemaService;
+        public CinemaController(AppDbContext context, ICinemaRepository cinemaService)
         {
             _context = context;
+            _cinemaService = cinemaService;
         }
 
         public IActionResult Index()
@@ -84,6 +87,14 @@ namespace CinemaWebApp.Controllers
 
             //Pass the CinemaDetailsViewModel object to the view
             return View(cinemaDetailsViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            IEnumerable<CinemaIndexViewModel> cinemas = await
+              _cinemaService.IndexGetAllOrderedByLocationAsunc();
+            return this.View(cinemas);
         }
     }
 }

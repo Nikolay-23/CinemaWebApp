@@ -1,5 +1,6 @@
 ﻿using CinemaWebApp.Models;
 using CinemaWebApp.Models.Data;
+using CinemaWebApp.Repositories.Contracts;
 using CinemaWebApp.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace CinemaWebApp.Controllers
     public class MovieController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IMovieRepository movieService;
         //Inject the AppDbContext using constructor dependency injection
-        public MovieController(AppDbContext context)
+        public MovieController(AppDbContext context, IMovieRepository movieService)
         {
             _context = context;
+            this.movieService = movieService;
         }
         public IActionResult Index()
         {
@@ -124,6 +127,13 @@ namespace CinemaWebApp.Controllers
             }
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            IEnumerable<AllMoviesIndexViewModel> movies = await this.movieService.GetAllMoviesAsync();
+            return this.View(movies);
         }
     }
 }
